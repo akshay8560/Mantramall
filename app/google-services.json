@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "844565736160",
+    "project_id": "mantrimall-bdd75",
+    "storage_bucket": "mantrimall-bdd75.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:844565736160:android:4bf37b006b8b2f8ef4be85",
+        "android_client_info": {
+          "package_name": "com.example.mantrimall"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "844565736160-shhidsqumiavrjlbsu8mthphr7k9sp30.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEgLQH26dlEMwQeFqh7_Cemp6nsM1E2pA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "844565736160-shhidsqumiavrjlbsu8mthphr7k9sp30.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:844565736160:android:961f36a0b5dce524f4be85",
+        "android_client_info": {
+          "package_name": "com.mantramall"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "844565736160-shhidsqumiavrjlbsu8mthphr7k9sp30.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEgLQH26dlEMwQeFqh7_Cemp6nsM1E2pA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "844565736160-shhidsqumiavrjlbsu8mthphr7k9sp30.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

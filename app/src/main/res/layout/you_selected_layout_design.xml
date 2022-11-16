@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/bottom_sheet_background"
+    android:backgroundTint="@color/white"
+    android:gravity="center|top"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/headerTVDialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/black"
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/_12sdp"
+        android:paddingBottom="@dimen/_12sdp"
+        android:text="Add Money">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/black"
+            android:backgroundTint="@color/black"
+            android:fontFamily="@font/lato_bold"
+            android:gravity="center|start"
+            android:letterSpacing="0.1"
+            android:paddingStart="@dimen/_10sdp"
+            android:text="You Selected - "
+            android:textColor="@color/white"
+            android:textSize="@dimen/_13ssp" />
+
+        <ImageView
+            android:id="@+id/selectedColorImg"
+            android:layout_width="@dimen/_15sdp"
+            android:layout_height="@dimen/_15sdp"
+            android:src="@drawable/green_round" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/lato"
+            android:gravity="start"
+            android:text="Contract Money :"
+            android:textAllCaps="true"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_10ssp" />
+
+        <TextView
+            android:id="@+id/amountContractDialogTV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/lato"
+            android:gravity="end"
+            android:text="₹10"
+            android:textAllCaps="true"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_10ssp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/amount10"
+            android:textColor="@color/text_black_2nd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_10sdp"
+            android:background="@drawable/textview_background_grey_stroke_grey_fill"
+            android:fontFamily="@font/lato"
+            android:padding="@dimen/_10sdp"
+            android:text="10"
+            android:textSize="@dimen/_11ssp" />
+
+        <TextView
+            android:id="@+id/amount100"
+            android:layout_width="wrap_content"
+            android:textColor="@color/text_black_2nd"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_10sdp"
+            android:background="@drawable/textview_background_grey_stroke"
+            android:fontFamily="@font/lato"
+            android:padding="@dimen/_10sdp"
+            android:text="100"
+            android:textSize="@dimen/_11ssp" />
+
+        <TextView
+            android:id="@+id/amount1000"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_black_2nd"
+            android:layout_margin="@dimen/_10sdp"
+            android:background="@drawable/textview_background_grey_stroke"
+            android:fontFamily="@font/lato"
+            android:padding="@dimen/_10sdp"
+            android:text="1000"
+            android:textSize="@dimen/_11ssp" />
+
+        <TextView
+            android:id="@+id/amount10000"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_black_2nd"
+            android:layout_margin="@dimen/_10sdp"
+            android:background="@drawable/textview_background_grey_stroke"
+            android:fontFamily="@font/lato"
+            android:padding="@dimen/_10sdp"
+            android:text="10000"
+            android:textSize="@dimen/_11ssp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:gravity="center|start"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/plus"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_25sdp"
+            android:textColor="@color/text_black_2nd"
+            android:background="@drawable/grey_stroke"
+            android:fontFamily="@font/lato"
+            android:gravity="center"
+            android:paddingStart="@dimen/_10sdp"
+            android:paddingTop="@dimen/_3sdp"
+            android:paddingEnd="@dimen/_10sdp"
+            android:paddingBottom="@dimen/_3sdp"
+            android:text="+"
+            android:textSize="@dimen/_20ssp" />
+
+        <TextView
+            android:id="@+id/count"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_25sdp"
+            android:textColor="@color/text_black_2nd"
+            android:background="@drawable/grey_stroke"
+            android:fontFamily="@font/lato"
+            android:gravity="center"
+            android:paddingStart="@dimen/_10sdp"
+            android:paddingTop="@dimen/_3sdp"
+            android:paddingEnd="@dimen/_10sdp"
+            android:paddingBottom="@dimen/_3sdp"
+            android:text="x 1"
+            android:textSize="@dimen/_15ssp" />
+
+        <TextView
+            android:id="@+id/minues"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_25sdp"
+            android:textColor="@color/text_black_2nd"
+            android:background="@drawable/grey_stroke"
+            android:fontFamily="@font/lato"
+            android:gravity="center"
+            android:paddingStart="@dimen/_10sdp"
+            android:paddingTop="@dimen/_3sdp"
+            android:paddingEnd="@dimen/_10sdp"
+            android:paddingBottom="@dimen/_3sdp"
+            android:text="-"
+            android:textSize="@dimen/_20ssp" />
+    </LinearLayout>
+
+    <CheckBox
+        android:id="@+id/checkbox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_5sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:fontFamily="@font/lato"
+        android:textColor="@color/text_black_2nd"
+        android:text="I Agree the Presale Managment Rule"
+        android:textSize="@dimen/_12ssp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <TextView
+            android:id="@+id/cancelBtnSelection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/text_black"
+            android:backgroundTint="@color/text_black_4th"
+            android:fontFamily="@font/lato_bold"
+            android:gravity="center"
+            android:paddingTop="@dimen/_10sdp"
+            android:paddingBottom="@dimen/_10sdp"
+            android:text="Cancel"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_13ssp" />
+
+        <TextView
+            android:id="@+id/confirmBtbSelection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/green"
+            android:fontFamily="@font/lato_bold"
+            android:gravity="center"
+            android:paddingTop="@dimen/_10sdp"
+            android:paddingBottom="@dimen/_10sdp"
+            android:text="Confirm"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_13ssp" />
+    </LinearLayout>
+
+</LinearLayout>
