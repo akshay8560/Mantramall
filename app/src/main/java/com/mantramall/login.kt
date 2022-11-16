@@ -1,10 +1,10 @@
 package com.mantramall
 
 import android.app.Dialog
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.media.midi.MidiDeviceStatus
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -21,15 +21,15 @@ import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.google.firebase.FirebaseException
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.PhoneAuthCredential
-import com.google.firebase.auth.PhoneAuthOptions
-import com.google.firebase.auth.PhoneAuthProvider
+import com.google.firebase.auth.*
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
+import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
+import com.mantramall.dataModel.UserData
 import com.mantramall.databinding.ActivityLoginBinding
 import com.mantramall.repository.Repository
 import com.mantramall.viewModel.MainViewModel
@@ -46,6 +46,7 @@ class login : AppCompatActivity() {
     private lateinit var database: DatabaseReference
     private lateinit var currentUser: FirebaseUser
     lateinit var sharedPrefference: SharedPreferences
+
     var phnNo = ""
     var vId = ""
     var tkn = ""
@@ -64,7 +65,7 @@ class login : AppCompatActivity() {
 
         sharedPrefference = getSharedPreferences("SHARED_PREF", Context.MODE_PRIVATE)
         mAuth = FirebaseAuth.getInstance()
-        currentUser = mAuth!!.currentUser!!
+//        currentUser = mAuth!!.currentUser!!
 
 
 //        binding.btnLogin.setOnClickListener {
@@ -77,6 +78,10 @@ class login : AppCompatActivity() {
         val database = Firebase.database
        // val myRef = database.reference
         val myRef = database.getReference("Users")
+        val userId = myRef.push().key!!
+
+
+
 
 
 
@@ -129,8 +134,34 @@ class login : AppCompatActivity() {
                                         editor.putString("phnNumber", phnNo)
                                         editor.putString("authenticated", "true")
                                         editor.apply()
+                                        var user=UserData("+91 "+phnNo)
+                                        myRef.child(userId).child("Mobile").setValue(user).addOnCompleteListener{
+                                            Toast.makeText(this, "data added on firebase", Toast.LENGTH_SHORT).show()
+                                        }.addOnFailureListener{
+                                            Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show()
+                                        }
 
-                                        myRef.child("Mobile").setValue(phnNo)
+
+
+
+//                                        myRef.addValueEventListener(object: ValueEventListener {
+//
+//                                            override fun onDataChange(snapshot: DataSnapshot) {
+//                                                // This method is called once with the initial value and again
+//                                                // whenever data at this location is updated.
+//                                              //  val value = snapshot.getValue<String>()
+//                                              //  Log.d(TAG, "Value is: " + value)
+//
+//                                            }
+//
+//                                            override fun onCancelled(error: DatabaseError) {
+//                                                Log.w(TAG, "Failed to read value.", error.toException())
+//                                            }
+//
+//                                        })
+
+
+
 
                                         binding.loadingLayout.visibility = View.GONE
                                         Toast.makeText(

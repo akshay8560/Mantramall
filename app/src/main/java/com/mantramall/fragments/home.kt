@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import com.cedarsoftware.util.io.JsonWriter.DATE_FORMAT
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mantramall.R
+import com.mantramall.R.id.minutes
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -20,7 +21,8 @@ import java.util.concurrent.TimeUnit
 class home : Fragment() {
     var contractAmount =0
     var START_MILLI_SECONDS = 60000L
-
+   private lateinit var minutes:TextView
+   private lateinit var seconds:TextView
 
     var isRunning: Boolean = false;
     var time_in_milli_seconds = 120000L
@@ -126,13 +128,16 @@ class home : Fragment() {
         greenBtn.setOnClickListener {
             contractBegin("Green")
 
-                object : CountDownTimer(180000, 1000) {
+                /*object : CountDownTimer(180000, 1000) {
 
                     override fun onTick(millisUntilFinished: Long) {
 
-                        minutes.setText(""+String.format("0%d", TimeUnit.MILLISECONDS.toMinutes( millisUntilFinished), -
-                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))))
-
+                            minutes.setText(""+String.format("0%d", TimeUnit.MILLISECONDS.toMinutes( millisUntilFinished), -
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))))
+                       *//* minutes.setText("" + String.format("%d : %d",
+                            TimeUnit.MICROSECONDS.toMinutes( millisUntilFinished),
+                            TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
+                                    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));*//*
 
                     }
 
@@ -143,17 +148,15 @@ class home : Fragment() {
                 object : CountDownTimer(60000, 1000) {
 
                     override fun onTick(millisUntilFinished: Long) {
-
                         val Secondss = millisUntilFinished / 1000 % 60
                         seconds.setText(String.format("%02d", Secondss))
-
 
                     }
 
                     override fun onFinish() {
                         minutes.setText("00")
                     }
-                }.start()
+                }.start()*/
 
 
         }
@@ -167,6 +170,7 @@ class home : Fragment() {
 
         return view
     }
+
 
 
 
@@ -187,18 +191,47 @@ class home : Fragment() {
         val amount1000 = view.findViewById<TextView>(R.id.amount1000)
         val amount10000 = view.findViewById<TextView>(R.id.amount10000)
 
-
         val plus = view.findViewById<TextView>(R.id.plus)
         val minues = view.findViewById<TextView>(R.id.minues)
         val count = view.findViewById<TextView>(R.id.count)
 
         confirm.setOnClickListener {
             if (checkbox.isChecked){
+
                 Toast.makeText(requireContext(), "Everything done and the amount is $contractAmount", Toast.LENGTH_SHORT).show()
                 dialog.hide()
             }else{
                 Toast.makeText(requireContext(), "Select checkbox first", Toast.LENGTH_SHORT).show()
             }
+//            object : CountDownTimer(180000, 1000) {
+//
+//                override fun onTick(millisUntilFinished: Long) {
+//
+//                    minutes.setText(""+String.format("0%d", TimeUnit.MILLISECONDS.toMinutes( millisUntilFinished), -
+//                 TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))))
+//                    /* minutes.setText("" + String.format("%d : %d",
+//                         TimeUnit.MICROSECONDS.toMinutes( millisUntilFinished),
+//                         TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
+//                                 TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));*/
+//
+//                }
+//
+//                override fun onFinish() {
+//                    minutes.setText("00")
+//                }
+//            }.start()
+//            object : CountDownTimer(60000, 1000) {
+//
+//                override fun onTick(millisUntilFinished: Long) {
+//                    val Secondss = millisUntilFinished / 1000 % 60
+//                    seconds.setText(String.format("%02d", Secondss))
+//
+//                }
+//
+//                override fun onFinish() {
+//                    minutes.setText("00")
+//                }
+//            }.start()
         }
         var c =1
         var clickCount =1
