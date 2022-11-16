@@ -204,7 +204,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/lato_bold"
                             android:gravity="center"
-                            android:text="10"
+                            android:text="00"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_11ssp" />
 
@@ -243,7 +243,7 @@
                             android:id="@+id/seconds"
                             android:fontFamily="@font/lato_bold"
                             android:gravity="center"
-                            android:text="10"
+                            android:text="00"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_11ssp" />
 

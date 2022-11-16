@@ -15,6 +15,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mantramall.R
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class home : Fragment() {
     var contractAmount =0
@@ -43,16 +44,12 @@ class home : Fragment() {
         val minutes = view.findViewById<TextView>(R.id.minutes)
         val seconds = view.findViewById<TextView>(R.id.seconds)
 
-        object : CountDownTimer(30000, 1000) {
+        /*object : CountDownTimer(180000, 1000) {
 
             override fun onTick(millisUntilFinished: Long) {
 
-                val Minutess = millisUntilFinished / (60 * 1000) % 60
-
-
-                    minutes.setText(String.format("%02d", Minutess))
-
-
+                minutes.setText(""+String.format("0%d", TimeUnit.MILLISECONDS.toMinutes( millisUntilFinished), -
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))))
 
 
             }
@@ -68,12 +65,13 @@ class home : Fragment() {
                 val Secondss = millisUntilFinished / 1000 % 60
                 seconds.setText(String.format("%02d", Secondss))
 
+
             }
 
             override fun onFinish() {
                 minutes.setText("00")
             }
-        }.start()
+        }.start()*/
         val num0 = view.findViewById<TextView>(R.id.num0)
         val num1 = view.findViewById<TextView>(R.id.num1)
         val num2 = view.findViewById<TextView>(R.id.num2)
@@ -119,13 +117,45 @@ class home : Fragment() {
 
         violetBtn.setOnClickListener {
             contractBegin("Violet")
+
         }
         redBtn.setOnClickListener {
             contractBegin("Red")
+
         }
         greenBtn.setOnClickListener {
             contractBegin("Green")
-           // test()
+
+                object : CountDownTimer(180000, 1000) {
+
+                    override fun onTick(millisUntilFinished: Long) {
+
+                        minutes.setText(""+String.format("0%d", TimeUnit.MILLISECONDS.toMinutes( millisUntilFinished), -
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))))
+
+
+                    }
+
+                    override fun onFinish() {
+                        minutes.setText("00")
+                    }
+                }.start()
+                object : CountDownTimer(60000, 1000) {
+
+                    override fun onTick(millisUntilFinished: Long) {
+
+                        val Secondss = millisUntilFinished / 1000 % 60
+                        seconds.setText(String.format("%02d", Secondss))
+
+
+                    }
+
+                    override fun onFinish() {
+                        minutes.setText("00")
+                    }
+                }.start()
+
+
         }
         addMoney.setOnClickListener {
             addMoney()
@@ -133,8 +163,11 @@ class home : Fragment() {
         rules.setOnClickListener {
             rules()
         }
+
+
         return view
     }
+
 
 
     fun contractBegin(color:String){
