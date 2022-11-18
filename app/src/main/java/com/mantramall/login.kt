@@ -1,7 +1,6 @@
 package com.mantramall
 
 import android.app.Dialog
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -22,12 +21,10 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.*
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
+import com.google.firebase.auth.FirebaseAuth.AuthStateListener
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
-import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import com.mantramall.dataModel.UserData
 import com.mantramall.databinding.ActivityLoginBinding
@@ -44,8 +41,9 @@ class login : AppCompatActivity() {
     lateinit var dialog: Dialog
 
     private lateinit var database: DatabaseReference
-    private lateinit var currentUser: FirebaseUser
+   // private lateinit var currentUser: FirebaseUser
     lateinit var sharedPrefference: SharedPreferences
+
 
     var phnNo = ""
     var vId = ""
@@ -65,8 +63,8 @@ class login : AppCompatActivity() {
 
         sharedPrefference = getSharedPreferences("SHARED_PREF", Context.MODE_PRIVATE)
         mAuth = FirebaseAuth.getInstance()
-//        currentUser = mAuth!!.currentUser!!
-
+        //val currentUser = mAuth!!.currentUser
+       var currentUser= Firebase.auth.currentUser!!
 
 //        binding.btnLogin.setOnClickListener {
 //
@@ -126,39 +124,22 @@ class login : AppCompatActivity() {
                             val credential = PhoneAuthProvider.getCredential(vId!!, code)
 
                             FirebaseAuth.getInstance().signInWithCredential(credential).addOnCompleteListener { task ->
-                                    if (task.isSuccessful) {
 
+                                    if (task.isSuccessful) {
+                                        //val currentusers = mAuth?.currentUser
                                         regester(phnNo,"kawsar")
                                         phnNo = binding.phnNumberET.text.trim().toString()
                                         val editor: SharedPreferences.Editor = sharedPrefference.edit()
                                         editor.putString("phnNumber", phnNo)
                                         editor.putString("authenticated", "true")
                                         editor.apply()
-                                        var user=UserData("+91 "+phnNo)
-                                        myRef.child(userId).child("Mobile").setValue(user).addOnCompleteListener{
-                                            Toast.makeText(this, "data added on firebase", Toast.LENGTH_SHORT).show()
-                                        }.addOnFailureListener{
-                                            Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show()
-                                        }
 
-
-
-
-//                                        myRef.addValueEventListener(object: ValueEventListener {
-//
-//                                            override fun onDataChange(snapshot: DataSnapshot) {
-//                                                // This method is called once with the initial value and again
-//                                                // whenever data at this location is updated.
-//                                              //  val value = snapshot.getValue<String>()
-//                                              //  Log.d(TAG, "Value is: " + value)
-//
-//                                            }
-//
-//                                            override fun onCancelled(error: DatabaseError) {
-//                                                Log.w(TAG, "Failed to read value.", error.toException())
-//                                            }
-//
-//                                        })
+                                          var user=UserData("+91 "+phnNo)
+                                          myRef.child(userId).child("Mobile").setValue(user).addOnCompleteListener{
+                                              //Toast.makeText(this, "data added on firebase", Toast.LENGTH_SHORT).show()
+                                          }.addOnFailureListener{
+                                              Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show()
+                                          }
 
 
 
@@ -167,13 +148,16 @@ class login : AppCompatActivity() {
                                         Toast.makeText(
                                             applicationContext, "Welcome...", Toast.LENGTH_SHORT
                                         ).show()
-                                        val intent =
-                                            Intent(applicationContext, MainActivity::class.java)
+
+
+                                        val intent = Intent(applicationContext, MainActivity::class.java)
                                         intent.flags =
                                             Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                                         startActivity(intent)
 
-                                    } else {
+                                    }
+
+                                    else {
                                         binding.loadingLayout.visibility = View.GONE
                                         Toast.makeText(
                                             applicationContext,
@@ -181,7 +165,8 @@ class login : AppCompatActivity() {
                                             Toast.LENGTH_SHORT
                                         ).show()
                                     }
-                                }
+
+                            }
 
 
                         }
@@ -190,6 +175,8 @@ class login : AppCompatActivity() {
             }
         }
     }
+
+
 
     var randomKey = "4364565df46"
 
@@ -454,6 +441,22 @@ class login : AppCompatActivity() {
         dialog.show()
 
     }
+
+    override fun onStart() {
+        super.onStart()
+
+//        if(mAuth?.currentUser !=null){
+//            val intent =
+//                Intent(applicationContext, MainActivity::class.java)
+//            intent.flags =
+//                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+//            startActivity(intent)
+//        }
+//        else{
+//            startActivity(Intent(this,login::class.java))
+//        }
+    }
+
 }
 
 

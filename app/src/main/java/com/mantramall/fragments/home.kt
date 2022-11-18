@@ -14,11 +14,16 @@ import com.cedarsoftware.util.io.JsonWriter.DATE_FORMAT
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mantramall.R
 import com.mantramall.R.id.minutes
+import com.wangsun.upi.payment.UpiPayment
+import com.wangsun.upi.payment.model.PaymentDetail
+import com.wangsun.upi.payment.model.TransactionDetails
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.info
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class home : Fragment() {
+class home : Fragment() , AnkoLogger {
     var contractAmount =0
     var START_MILLI_SECONDS = 60000L
    private lateinit var minutes:TextView
@@ -162,6 +167,7 @@ class home : Fragment() {
         }
         addMoney.setOnClickListener {
             addMoney()
+
         }
         rules.setOnClickListener {
             rules()
@@ -416,6 +422,7 @@ class home : Fragment() {
             val amount = amountET.text
             if (amount.isNotEmpty()){
                 Toast.makeText(requireContext(), "$amount", Toast.LENGTH_SHORT).show()
+                startUpiPayment()
             }else{
                 Toast.makeText(requireContext(), "Enter amount", Toast.LENGTH_SHORT).show()
             }
@@ -426,7 +433,65 @@ class home : Fragment() {
         dialog.show()
     }
 
+    private fun startUpiPayment() {
+        val payment = PaymentDetail(
+            vpa = "Q58106985@ybl",
+            name = "Mukesh Kumar",
+            payeeMerchantCode = "",
+            //txnId = "",
+            txnRefId = "",
+            description = "description",
+            amount ="1.00"
+        )
+
+        activity?.let {
+            UpiPayment(it)
+                .setPaymentDetail(payment)
+                .setUpiApps(UpiPayment.UPI_APPS)
+                .setCallBackListener(object : UpiPayment.OnUpiPaymentListener {
+                    override fun onError(message: String) {
+                        info { "transaction failed: $message" }
+                        Toast.makeText(context, "transaction failed: $message", Toast.LENGTH_LONG).show()
+                    }
+
+                    override fun onSubmitted(data: TransactionDetails) {
+                        info { "transaction pending: $data" }
+                        Toast.makeText(context, "transaction pending: $data", Toast.LENGTH_LONG).show()
+                    }
+
+                    override fun onSuccess(data: TransactionDetails) {
+                        info { "transaction success: $data" }
+                        Toast.makeText(context, "transaction success: $data", Toast.LENGTH_LONG).show()
+                    }
+
+                }).pay()
+
+            val existingApps = context?.let { it1 -> UpiPayment.getExistingUpiApps(it1) }
+            info { "existing app: $existingApps" }
+//        UpiPayment(this)
+//            .setPaymentDetail(payment)
+//            .setUpiApps(UpiPayment.UPI_APPS)
+//            .setCallBackListener(object : UpiPayment.OnUpiPaymentListener{
+//                override fun onSubmitted(data: TransactionDetails) {
+//                    info { "transaction pending: $data" }
+//                    Toast.makeText(this@MainActivity,"transaction pending: $data",Toast.LENGTH_LONG).show()
+//                }
+//                override fun onSuccess(data: TransactionDetails) {
+//                    info { "transaction success: $data" }
+//                    Toast.makeText(this@MainActivity,"transaction success: $data",Toast.LENGTH_LONG).show()
+//                }
+//                override fun onError(message: String) {
+//                    info { "transaction failed: $message" }
+//                    Toast.makeText(this@MainActivity,"transaction failed: $message",Toast.LENGTH_LONG).show()
+//                }
+//            }).pay()
+//
+//
+//        val existingApps = UpiPayment.getExistingUpiApps(this)
+//        info { "existing app: $existingApps" }
 
 
+        }
+    }
 
 }
