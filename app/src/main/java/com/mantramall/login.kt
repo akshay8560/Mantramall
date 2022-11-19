@@ -64,7 +64,7 @@ class login : AppCompatActivity() {
         sharedPrefference = getSharedPreferences("SHARED_PREF", Context.MODE_PRIVATE)
         mAuth = FirebaseAuth.getInstance()
         //val currentUser = mAuth!!.currentUser
-       var currentUser= Firebase.auth.currentUser!!
+//       var currentUser= Firebase.auth.currentUser!!
 
 //        binding.btnLogin.setOnClickListener {
 //

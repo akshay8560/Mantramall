@@ -1,8 +1,13 @@
 buildscript {
+    repositories {
+        mavenCentral()
+    }
+
     dependencies {
         classpath 'com.google.gms:google-services:4.3.14'
     }
 }
+
 plugins {
     id 'org.jetbrains.kotlin.android'
     id 'com.google.gms.google-services'
@@ -11,12 +16,12 @@ plugins {
 
 android {
     namespace 'com.mantramall'
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.mantramall"
         minSdk 21
-        targetSdk 32
+        targetSdk 33
         versionCode 1
         multiDexEnabled true
         versionName "1.0"
@@ -54,7 +59,7 @@ android {
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'com.google.android.material:material:1.7.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
@@ -80,6 +85,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.9'
 
     implementation 'dev.shreyaspatil.EasyUpiPayment:EasyUpiPayment:3.0.3'
+   // implementation 'com.shreyaspatil:EasyUpiPayment:2.0'
 
     implementation 'com.squareup.okhttp3:okhttp:4.9.1'
 

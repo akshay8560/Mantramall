@@ -41,6 +41,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/lato_bold"
                 android:text="₹ 800"
+                android:id="@+id/walletamount"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_15ssp" />
 
@@ -59,6 +60,7 @@
                     android:textSize="@dimen/_12ssp" />
 
                 <TextView
+                    android:id="@+id/textname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_5sdp"
@@ -82,6 +84,7 @@
                     android:textSize="@dimen/_12ssp" />
 
                 <TextView
+                    android:id="@+id/name_id"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_5sdp"
