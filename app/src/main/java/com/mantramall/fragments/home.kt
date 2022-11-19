@@ -18,6 +18,7 @@ import com.wangsun.upi.payment.model.TransactionDetails
 import kotlinx.android.synthetic.main.fragment_home.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
+import java.util.concurrent.TimeUnit
 
 class home : Fragment() ,AnkoLogger {
 
@@ -209,35 +210,35 @@ class home : Fragment() ,AnkoLogger {
             }else{
                 Toast.makeText(requireContext(), "Select checkbox first", Toast.LENGTH_SHORT).show()
             }
-//            object : CountDownTimer(180000, 1000) {
-//
-//                override fun onTick(millisUntilFinished: Long) {
-//
-//                    minutes.setText(""+String.format("0%d", TimeUnit.MILLISECONDS.toMinutes( millisUntilFinished), -
-//                 TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))))
-//                    /* minutes.setText("" + String.format("%d : %d",
-//                         TimeUnit.MICROSECONDS.toMinutes( millisUntilFinished),
-//                         TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
-//                                 TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));*/
-//
-//                }
-//
-//                override fun onFinish() {
-//                    minutes.setText("00")
-//                }
-//            }.start()
-//            object : CountDownTimer(60000, 1000) {
-//
-//                override fun onTick(millisUntilFinished: Long) {
-//                    val Secondss = millisUntilFinished / 1000 % 60
-//                    seconds.setText(String.format("%02d", Secondss))
-//
-//                }
-//
-//                override fun onFinish() {
-//                    minutes.setText("00")
-//                }
-//            }.start()
+            object : CountDownTimer(180000, 1000) {
+
+                override fun onTick(millisUntilFinished: Long) {
+
+                    minutes.setText(""+String.format("0%d", TimeUnit.MILLISECONDS.toMinutes( millisUntilFinished), -
+                 TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))))
+                     minutes.setText("" + String.format("%d : %d",
+                         TimeUnit.MICROSECONDS.toMinutes( millisUntilFinished),
+                         TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
+                                 TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
+
+                }
+
+                override fun onFinish() {
+                    minutes.setText("00")
+                }
+            }.start()
+            object : CountDownTimer(60000, 1000) {
+
+                override fun onTick(millisUntilFinished: Long) {
+                    val Secondss = millisUntilFinished / 1000 % 60
+                    seconds.setText(String.format("%02d", Secondss))
+
+                }
+
+                override fun onFinish() {
+                    minutes.setText("00")
+                }
+            }.start()
         }
         var c =1
         var clickCount =1
