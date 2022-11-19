@@ -64,7 +64,7 @@
             android:layout_margin="@dimen/_5sdp"
             android:background="@drawable/textview_background_grey_stroke"
             android:fontFamily="@font/lato"
-            android:inputType="number"
+            android:inputType="phone"
             android:textColor="@color/black"
             android:textColorHint="@color/text_black_4th"
             android:textCursorDrawable="@drawable/color_cursor"
