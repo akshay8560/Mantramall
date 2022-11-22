@@ -1,5 +1,6 @@
 package com.mantramall
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -13,6 +14,7 @@ import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.gson.Gson
@@ -30,11 +32,18 @@ import java.net.URL
 class MainActivity : AppCompatActivity() {
    private lateinit var database:DatabaseReference
     private lateinit var binding: ActivityMainBinding
+    lateinit var auth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding= ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        auth= FirebaseAuth.getInstance()
 
+        var currentUser=auth.currentUser
+        if(currentUser==null){
+            startActivity(Intent(this,login::class.java))
+            finish()
+        }
         getUserProfile()
         getEditUserProfile()
         getUserImage()

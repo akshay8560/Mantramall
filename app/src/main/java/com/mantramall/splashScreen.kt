@@ -7,16 +7,14 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.Window
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.ktx.Firebase
 import com.mantramall.databinding.ActivitySplashScreenBinding
-import com.mantramall.viewModel.MainViewModel
-import com.mantramall.repository.Repository
-import com.mantramall.viewModelFactory.MainViewModelFactory
 
 
 class splashScreen : AppCompatActivity() {
@@ -24,21 +22,37 @@ class splashScreen : AppCompatActivity() {
 
     private lateinit var binding: ActivitySplashScreenBinding
     lateinit var sharedPrefference: SharedPreferences
+    lateinit var database: FirebaseDatabase
+
+    lateinit var mAuth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySplashScreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
         sharedPrefference = getSharedPreferences("SHARED_PREF", Context.MODE_PRIVATE)
 
-//        startsecondactivity()
+        //startsecondactivity()
 
-        val intent = Intent(applicationContext, login::class.java)
-        startActivity(intent)
-        finish()
+        mAuth=FirebaseAuth.getInstance()
+        var currentUser = mAuth.currentUser
+        if(currentUser != null) {
+            startActivity(Intent(applicationContext, MainActivity::class.java))
+            finish()
+        }
+        else{
+            val intent = Intent(applicationContext, login::class.java)
+            startActivity(intent)
+            finish()
+        }
+
 
     }
-   fun dialogView() {
+
+
+
+    fun dialogView() {
 
        val dialog = Dialog(this@splashScreen, R.style.BottomSheetDialogTheme)
 
@@ -57,20 +71,38 @@ class splashScreen : AppCompatActivity() {
            startActivity(intent)
            finish()
        }
-       dialog.show()
+
+           dialog.show()
+
+
+
+
     }
+
 
     fun startsecondactivity() {
         Handler(Looper.getMainLooper()).postDelayed({
-//            val authenticated = sharedPrefference.getString("authenticated", "false")
+
+           // val authenticated = sharedPrefference.getString("authenticated", "false")
             val authenticated = sharedPrefference.getString("authenticatsdfed", "false")
             if (authenticated == "true") {
                 val intent = Intent(applicationContext, MainActivity::class.java)
                 startActivity(intent)
                 finish()
-            } else {
+            }
+            else {
                 dialogView()
+
             }
         }, 3000)
     }
+//    override fun onStart() {
+//        super.onStart()
+//        val currentUser = mAuth.currentUser
+//        if (currentUser == null) {
+//            dialogView()
+//        } else {
+//           startsecondactivity()
+//        }
+//    }
 }

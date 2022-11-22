@@ -18,7 +18,6 @@ import com.wangsun.upi.payment.model.TransactionDetails
 import kotlinx.android.synthetic.main.fragment_home.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
-import java.util.concurrent.TimeUnit
 
 class home : Fragment() ,AnkoLogger {
 
@@ -42,12 +41,13 @@ class home : Fragment() ,AnkoLogger {
 
         val addMoney = view.findViewById<TextView>(R.id.addMoneyBtn)
         val rules = view.findViewById<TextView>(R.id.gameRulesBtn)
-          val walletamount = view.findViewById<TextView>(R.id.walletamount)
+          val walletamounts = view.findViewById<TextView>(R.id.walletamount)
         val greenBtn = view.findViewById<ImageView>(R.id.greenBtn)
         val redBtn = view.findViewById<ImageView>(R.id.redBtn)
         val violetBtn = view.findViewById<ImageView>(R.id.violetBtn)
         val minutes = view.findViewById<TextView>(R.id.minutes)
         val seconds = view.findViewById<TextView>(R.id.seconds)
+       //  var totalWalletamount=walletamounts.setText("1000")
 
 
         /*object : CountDownTimer(180000, 1000) {
@@ -210,35 +210,35 @@ class home : Fragment() ,AnkoLogger {
             }else{
                 Toast.makeText(requireContext(), "Select checkbox first", Toast.LENGTH_SHORT).show()
             }
-            object : CountDownTimer(180000, 1000) {
-
-                override fun onTick(millisUntilFinished: Long) {
-
-                    minutes.setText(""+String.format("0%d", TimeUnit.MILLISECONDS.toMinutes( millisUntilFinished), -
-                 TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))))
-                     minutes.setText("" + String.format("%d : %d",
-                         TimeUnit.MICROSECONDS.toMinutes( millisUntilFinished),
-                         TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
-                                 TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
-
-                }
-
-                override fun onFinish() {
-                    minutes.setText("00")
-                }
-            }.start()
-            object : CountDownTimer(60000, 1000) {
-
-                override fun onTick(millisUntilFinished: Long) {
-                    val Secondss = millisUntilFinished / 1000 % 60
-                    seconds.setText(String.format("%02d", Secondss))
-
-                }
-
-                override fun onFinish() {
-                    minutes.setText("00")
-                }
-            }.start()
+//            object : CountDownTimer(180000, 1000) {
+//
+//                override fun onTick(millisUntilFinished: Long) {
+//
+//                    minutes.setText(""+String.format("0%d", TimeUnit.MILLISECONDS.toMinutes( millisUntilFinished), -
+//                 TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))))
+//                    /* minutes.setText("" + String.format("%d : %d",
+//                         TimeUnit.MICROSECONDS.toMinutes( millisUntilFinished),
+//                         TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
+//                                 TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));*/
+//
+//                }
+//
+//                override fun onFinish() {
+//                    minutes.setText("00")
+//                }
+//            }.start()
+//            object : CountDownTimer(60000, 1000) {
+//
+//                override fun onTick(millisUntilFinished: Long) {
+//                    val Secondss = millisUntilFinished / 1000 % 60
+//                    seconds.setText(String.format("%02d", Secondss))
+//
+//                }
+//
+//                override fun onFinish() {
+//                    minutes.setText("00")
+//                }
+//            }.start()
         }
         var c =1
         var clickCount =1
@@ -311,7 +311,6 @@ class home : Fragment() ,AnkoLogger {
 
         val view: View = layoutInflater.inflate(R.layout.number_selected_layout_design,null)
         val dialog = BottomSheetDialog(requireContext(),R.style.BottomSheetDialogTheme)
-
         val cancel = view.findViewById<TextView>(R.id.cancelBtnSelection)
         val confirm = view.findViewById<TextView>(R.id.confirmBtbSelection)
         val selectedNumberTV = view.findViewById<TextView>(R.id.selectedNumber)
@@ -427,6 +426,7 @@ class home : Fragment() ,AnkoLogger {
 
            val amount= amountETM.getText().toString()
 
+
             if (amount.isNotEmpty()){
                 Toast.makeText(requireContext(), "$amount", Toast.LENGTH_SHORT).show()
                 startUpiPayment(amount)
@@ -457,7 +457,7 @@ class home : Fragment() ,AnkoLogger {
              description = "description",
              amount = "$amount.00"
          )
-
+            var totalAmount= amount
 
          activity?.let {
              UpiPayment(it)
@@ -480,6 +480,7 @@ class home : Fragment() ,AnkoLogger {
                              "transaction success: $data"
                          }
                          walletamount.setText(amount)
+
                          Toast.makeText(context, "transaction success: $data", Toast.LENGTH_LONG).show()
                      }
 

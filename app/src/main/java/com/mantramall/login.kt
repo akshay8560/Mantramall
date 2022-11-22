@@ -1,5 +1,6 @@
 package com.mantramall
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -21,9 +22,11 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.*
-import com.google.firebase.auth.FirebaseAuth.AuthStateListener
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.mantramall.dataModel.UserData
@@ -31,6 +34,7 @@ import com.mantramall.databinding.ActivityLoginBinding
 import com.mantramall.repository.Repository
 import com.mantramall.viewModel.MainViewModel
 import com.mantramall.viewModelFactory.MainViewModelFactory
+import kotlinx.android.synthetic.main.activity_main.*
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.concurrent.TimeUnit
@@ -40,21 +44,24 @@ class login : AppCompatActivity() {
 
     lateinit var dialog: Dialog
 
-    private lateinit var database: DatabaseReference
+    private lateinit var databaseRef: DatabaseReference
+    private lateinit var currentUsers: FirebaseUser
    // private lateinit var currentUser: FirebaseUser
     lateinit var sharedPrefference: SharedPreferences
+    private val valueEventListener: ValueEventListener? = null
 
 
     var phnNo = ""
     var vId = ""
     var tkn = ""
     var clickState = 0
-    private var mAuth: FirebaseAuth? = null
+    private lateinit var mAuth: FirebaseAuth
     private var mCallbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks? = null
 
     private lateinit var viewModel: MainViewModel
 
     private lateinit var binding: ActivityLoginBinding
+    @SuppressLint("SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
@@ -63,8 +70,11 @@ class login : AppCompatActivity() {
 
         sharedPrefference = getSharedPreferences("SHARED_PREF", Context.MODE_PRIVATE)
         mAuth = FirebaseAuth.getInstance()
-        //val currentUser = mAuth!!.currentUser
-//       var currentUser= Firebase.auth.currentUser!!
+        val storedVerificationId=intent.getStringExtra("storedVerificationId")
+       // currentUsers = Firebase.auth.currentUser!!
+
+
+
 
 //        binding.btnLogin.setOnClickListener {
 //
@@ -74,16 +84,20 @@ class login : AppCompatActivity() {
 ////            user("9864933180", "", ran.toString())
 //        }
         val database = Firebase.database
-       // val myRef = database.reference
+
         val myRef = database.getReference("Users")
         val userId = myRef.push().key!!
 
-
-
-
-
-
+//      if(currentUsers!=null){
+//          val intent = Intent(applicationContext, MainActivity::class.java)
+//
+//          startActivity(intent)
+//      }
+//        else{
+//
+//      }
         binding.btnLogin.setOnClickListener {
+
 
             if (clickState == 0) {
                 if (binding.phnNumberET.text.toString().trim().isEmpty()) {
@@ -93,11 +107,13 @@ class login : AppCompatActivity() {
                     Toast.makeText(this, "Type valid Phone Number of 10 digit", Toast.LENGTH_SHORT)
                         .show()
                 } else {
-                   otpSend()
+                    otpSend()
                     phnNo = binding.phnNumberET.text.trim().toString()
-                    otpRequest(phnNo)
+
+                    // otpRequest(phnNo)
                 }
-            } else if (clickState == 1) {
+            }
+            else if (clickState == 1) {
 
                 run {
                     binding.loadingLayout.visibility = View.VISIBLE;
@@ -112,68 +128,118 @@ class login : AppCompatActivity() {
                         Toast.makeText(applicationContext, "OTP is not Valid!", Toast.LENGTH_SHORT)
                             .show();
                     } else {
-                        if (vId != null) {
-                            var code: String? = null
-                            code = binding.etC1.text.toString().trim() +
-                                    binding.etC2.text.toString().trim() +
-                                    binding.etC3.text.toString().trim() +
-                                    binding.etC4.text.toString().trim() +
-                                    binding.etC5.text.toString().trim() +
-                                    binding.etC6.text.toString().trim();
+                        var code: String? = null
+                        code = binding.etC1.text.toString().trim() +
+                                binding.etC2.text.toString().trim() +
+                                binding.etC3.text.toString().trim() +
+                                binding.etC4.text.toString().trim() +
+                                binding.etC5.text.toString().trim() +
+                                binding.etC6.text.toString().trim();
 
-                            val credential = PhoneAuthProvider.getCredential(vId!!, code)
+                        val credential = PhoneAuthProvider.getCredential(vId, code)
 
-                            FirebaseAuth.getInstance().signInWithCredential(credential).addOnCompleteListener { task ->
+                        mAuth.signInWithCredential(credential)
+                            .addOnCompleteListener(this) { task ->
 
-                                    if (task.isSuccessful) {
-                                        //val currentusers = mAuth?.currentUser
-                                        regester(phnNo,"kawsar")
-                                        phnNo = binding.phnNumberET.text.trim().toString()
-                                        val editor: SharedPreferences.Editor = sharedPrefference.edit()
-                                        editor.putString("phnNumber", phnNo)
-                                        editor.putString("authenticated", "true")
-                                        editor.apply()
+                                if (task.isSuccessful) {
+                                    regester(phnNo,"kawsar")
+                                    phnNo = binding.phnNumberET.text.trim().toString()
 
-                                          var user=UserData("+91 "+phnNo)
-                                          myRef.child(userId).child("Mobile").setValue(user).addOnCompleteListener{
-                                              //Toast.makeText(this, "data added on firebase", Toast.LENGTH_SHORT).show()
-                                          }.addOnFailureListener{
-                                              Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show()
-                                          }
+                                    val editor: SharedPreferences.Editor = sharedPrefference.edit()
+                                    editor.putString("phnNumber", phnNo)
+                                    editor.putString("authenticated", "true")
+                                    editor.apply()
+
+                                    val user=UserData("+91 "+phnNo)
+                                    myRef.child(userId).child("Mobile").setValue(user)
 
 
+                                    binding.loadingLayout.visibility = View.GONE
+                                    Toast.makeText(
+                                        applicationContext, "Welcome...", Toast.LENGTH_SHORT
+                                    ).show()
+
+                                    val intent = Intent(applicationContext, MainActivity::class.java)
+                                    intent.putExtra("mobile",phnNo );
+                                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                    startActivity(intent)
+//                                           myRef.addValueEventListener(object :
+//                                               ValueEventListener {
+//                                               override fun onDataChange(snapshot: DataSnapshot) {
+//                                                   if (snapshot.exists()) {
+//
+//                                                   }
+//                                                   else {
+////                                                   val intent = Intent(applicationContext, login::class.java)
+////                                                   intent.putExtra("mobile",phnNo)
+////                                                   startActivity(intent)
+//                                                   }
+//                                               }
+//
+//                                               override fun onCancelled(error: DatabaseError) {}
+//                                           })
 
 
-                                        binding.loadingLayout.visibility = View.GONE
-                                        Toast.makeText(
-                                            applicationContext, "Welcome...", Toast.LENGTH_SHORT
-                                        ).show()
+                                } else {
+                                    binding.loadingLayout.visibility = View.GONE
+                                    Toast.makeText(
+                                        applicationContext,
+                                        "OTP is not Valid!",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
 
-
-                                        val intent = Intent(applicationContext, MainActivity::class.java)
-                                        intent.flags =
-                                            Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                                        startActivity(intent)
-
-                                    }
-
-                                    else {
-                                        binding.loadingLayout.visibility = View.GONE
-                                        Toast.makeText(
-                                            applicationContext,
-                                            "OTP is not Valid!",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                    }
+                                }
 
                             }
 
 
-                        }
+//                               FirebaseAuth.getInstance().signInWithCredential(credential).addOnCompleteListener { task ->
+//
+//                                   if (task.isSuccessful) {
+////                                       regester(phnNo,"kawsar")
+////                                       phnNo = binding.phnNumberET.text.trim().toString()
+////                                       val editor: SharedPreferences.Editor = sharedPrefference.edit()
+////                                       editor.putString("phnNumber", phnNo)
+////                                       editor.putString("authenticated", "true")
+////                                       editor.apply()
+////
+////                                       val user=UserData("+91 "+phnNo)
+////                                       myRef.child(userId).child("Mobile").setValue(user)
+////
+////
+////
+////                                       binding.loadingLayout.visibility = View.GONE
+////                                       Toast.makeText(
+////                                           applicationContext, "Welcome...", Toast.LENGTH_SHORT
+////                                       ).show()
+////
+////
+////                                       val intent = Intent(applicationContext, MainActivity::class.java)
+////                                       intent.flags =
+////                                           Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+////                                       startActivity(intent)
+//
+//                                   }
+//
+//                                   else {
+////                                       binding.loadingLayout.visibility = View.GONE
+////                                       Toast.makeText(
+////                                           applicationContext,
+////                                           "OTP is not Valid!",
+////                                           Toast.LENGTH_SHORT
+////                                       ).show()
+//                                   }
+//
+//                               }
+
+
                     }
                 }
             }
+
+
         }
+
     }
 
 
@@ -206,30 +272,30 @@ class login : AppCompatActivity() {
             e.printStackTrace()
         }
     }
-    private fun otpRequest(phnNo: String) {
-        try {
-
-            val ran = System.currentTimeMillis() / 1000
-            val requestQueue = Volley.newRequestQueue(this)
-            val URL = "https://mantrimall.anjalpufoam.in/public/api/user-request"
-            val jsonBody = JSONObject()
-            jsonBody.put("mobile", phnNo)
-            jsonBody.put("random", randomKey.toString())
-//            jsonBody.put("refrence", "dfasdfgdg")
-            val requestBody = jsonBody.toString()
-            val stringRequest: StringRequest = object : StringRequest(
-                Method.POST, URL,
-                Response.Listener { response ->
-                    Log.e("VOLLEY", response.toString())
-                  //  otpSend()
-                    Toast.makeText(applicationContext, response.toString(), Toast.LENGTH_SHORT).show()},
-                Response.ErrorListener { error -> Log.e("VOLLEY", error.toString()) }) {
-            }
-            requestQueue.add(stringRequest)
-        } catch (e: JSONException) {
-            e.printStackTrace()
-        }
-    }
+//    private fun otpRequest(phnNo: String) {
+//        try {
+//
+//            val ran = System.currentTimeMillis() / 1000
+//            val requestQueue = Volley.newRequestQueue(this)
+//            val URL = "https://mantrimall.anjalpufoam.in/public/api/user-request"
+//            val jsonBody = JSONObject()
+//            jsonBody.put("mobile", phnNo)
+//            jsonBody.put("random", randomKey.toString())
+////            jsonBody.put("refrence", "dfasdfgdg")
+//            val requestBody = jsonBody.toString()
+//            val stringRequest: StringRequest = object : StringRequest(
+//                Method.POST, URL,
+//                Response.Listener { response ->
+//                    Log.e("VOLLEY", response.toString())
+//                  //  otpSend()
+//                    Toast.makeText(applicationContext, response.toString(), Toast.LENGTH_SHORT).show()},
+//                Response.ErrorListener { error -> Log.e("VOLLEY", error.toString()) }) {
+//            }
+//            requestQueue.add(stringRequest)
+//        } catch (e: JSONException) {
+//            e.printStackTrace()
+//        }
+//    }
 
     private fun userImage(message: String,status: Boolean){
 
