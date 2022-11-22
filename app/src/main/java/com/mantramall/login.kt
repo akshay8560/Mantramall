@@ -22,11 +22,7 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.*
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.mantramall.dataModel.UserData
@@ -44,11 +40,11 @@ class login : AppCompatActivity() {
 
     lateinit var dialog: Dialog
 
-    private lateinit var databaseRef: DatabaseReference
+    private lateinit var myRef: DatabaseReference
     private lateinit var currentUsers: FirebaseUser
-   // private lateinit var currentUser: FirebaseUser
+
     lateinit var sharedPrefference: SharedPreferences
-    private val valueEventListener: ValueEventListener? = null
+
 
 
     var phnNo = ""
@@ -70,32 +66,17 @@ class login : AppCompatActivity() {
 
         sharedPrefference = getSharedPreferences("SHARED_PREF", Context.MODE_PRIVATE)
         mAuth = FirebaseAuth.getInstance()
-        val storedVerificationId=intent.getStringExtra("storedVerificationId")
-       // currentUsers = Firebase.auth.currentUser!!
 
 
 
 
-//        binding.btnLogin.setOnClickListener {
-//
-//            phnNo = binding.phnNumberET.text.trim().toString()
-//            val ran = System.currentTimeMillis() / 1000
-//            otpRequest(phnNo)
-////            user("9864933180", "", ran.toString())
-//        }
+
         val database = Firebase.database
 
-        val myRef = database.getReference("Users")
-        val userId = myRef.push().key!!
+         myRef = database.getReference("Users")
 
-//      if(currentUsers!=null){
-//          val intent = Intent(applicationContext, MainActivity::class.java)
-//
-//          startActivity(intent)
-//      }
-//        else{
-//
-//      }
+
+
         binding.btnLogin.setOnClickListener {
 
 
@@ -141,6 +122,7 @@ class login : AppCompatActivity() {
                         mAuth.signInWithCredential(credential)
                             .addOnCompleteListener(this) { task ->
 
+                                var userId= mAuth.getCurrentUser()?.getUid()
                                 if (task.isSuccessful) {
                                     regester(phnNo,"kawsar")
                                     phnNo = binding.phnNumberET.text.trim().toString()
@@ -149,11 +131,20 @@ class login : AppCompatActivity() {
                                     editor.putString("phnNumber", phnNo)
                                     editor.putString("authenticated", "true")
                                     editor.apply()
+                                    val nameId = (1000..10000).shuffled().last()
+                                    val map: HashMap<String, Any> = HashMap()
+                                    map.put("Mobile ","+91 "+phnNo);
+                                    map.put("Name","Guest_"+nameId)
+                                    map.put("NameId",nameId)
+                                    if (userId != null) {
+                                        map.put("id",userId)
+                                    };
+                                    map.put("imageurl","https://firebasestorage.googleapis.com/v0/b/mantrimall-bdd75.appspot.com/o/profile.png?alt=media&token=f1c19692-bf9c-4fce-9e88-a2aba433f271")
 
-                                    val user=UserData("+91 "+phnNo)
-                                    myRef.child(userId).child("Mobile").setValue(user)
-
-
+                                    val user=UserData("+91 "+phnNo ,"guest","id","")
+                                    if (userId != null) {
+                                        myRef.child(userId).setValue(map)
+                                    }
                                     binding.loadingLayout.visibility = View.GONE
                                     Toast.makeText(
                                         applicationContext, "Welcome...", Toast.LENGTH_SHORT
@@ -163,21 +154,7 @@ class login : AppCompatActivity() {
                                     intent.putExtra("mobile",phnNo );
                                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                                     startActivity(intent)
-//                                           myRef.addValueEventListener(object :
-//                                               ValueEventListener {
-//                                               override fun onDataChange(snapshot: DataSnapshot) {
-//                                                   if (snapshot.exists()) {
-//
-//                                                   }
-//                                                   else {
-////                                                   val intent = Intent(applicationContext, login::class.java)
-////                                                   intent.putExtra("mobile",phnNo)
-////                                                   startActivity(intent)
-//                                                   }
-//                                               }
-//
-//                                               override fun onCancelled(error: DatabaseError) {}
-//                                           })
+
 
 
                                 } else {
@@ -193,44 +170,8 @@ class login : AppCompatActivity() {
                             }
 
 
-//                               FirebaseAuth.getInstance().signInWithCredential(credential).addOnCompleteListener { task ->
-//
-//                                   if (task.isSuccessful) {
-////                                       regester(phnNo,"kawsar")
-////                                       phnNo = binding.phnNumberET.text.trim().toString()
-////                                       val editor: SharedPreferences.Editor = sharedPrefference.edit()
-////                                       editor.putString("phnNumber", phnNo)
-////                                       editor.putString("authenticated", "true")
-////                                       editor.apply()
-////
-////                                       val user=UserData("+91 "+phnNo)
-////                                       myRef.child(userId).child("Mobile").setValue(user)
-////
-////
-////
-////                                       binding.loadingLayout.visibility = View.GONE
-////                                       Toast.makeText(
-////                                           applicationContext, "Welcome...", Toast.LENGTH_SHORT
-////                                       ).show()
-////
-////
-////                                       val intent = Intent(applicationContext, MainActivity::class.java)
-////                                       intent.flags =
-////                                           Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-////                                       startActivity(intent)
-//
-//                                   }
-//
-//                                   else {
-////                                       binding.loadingLayout.visibility = View.GONE
-////                                       Toast.makeText(
-////                                           applicationContext,
-////                                           "OTP is not Valid!",
-////                                           Toast.LENGTH_SHORT
-////                                       ).show()
-//                                   }
-//
-//                               }
+
+
 
 
                     }
@@ -368,7 +309,7 @@ class login : AppCompatActivity() {
 
             override fun onCodeSent(
                 verificationId: String,
-                token: PhoneAuthProvider.ForceResendingToken
+                token: PhoneAuthProvider.ForceResendingToken,
             ) {
                 clickState = 1
                 binding.loadingLayout.visibility = View.GONE
@@ -508,20 +449,7 @@ class login : AppCompatActivity() {
 
     }
 
-    override fun onStart() {
-        super.onStart()
 
-//        if(mAuth?.currentUser !=null){
-//            val intent =
-//                Intent(applicationContext, MainActivity::class.java)
-//            intent.flags =
-//                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-//            startActivity(intent)
-//        }
-//        else{
-//            startActivity(Intent(this,login::class.java))
-//        }
-    }
 
 }
 

@@ -47,6 +47,11 @@ class home : Fragment() ,AnkoLogger {
         val violetBtn = view.findViewById<ImageView>(R.id.violetBtn)
         val minutes = view.findViewById<TextView>(R.id.minutes)
         val seconds = view.findViewById<TextView>(R.id.seconds)
+        val guest_name=view.findViewById<TextView>(R.id.guestName)
+        val name_Id=view.findViewById<TextView>(R.id.name_id)
+
+
+
        //  var totalWalletamount=walletamounts.setText("1000")
 
 
