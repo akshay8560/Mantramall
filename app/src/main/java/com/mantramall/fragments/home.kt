@@ -14,6 +14,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import com.mantramall.R
 import com.mantramall.dataModel.UserData
 import com.wangsun.upi.payment.UpiPayment
@@ -27,7 +29,7 @@ import org.jetbrains.anko.info
 class home : Fragment() ,AnkoLogger {
 
     private var firebaseUser: FirebaseUser? = null
-    private var myRef: DatabaseReference? = null
+    private lateinit var myRef: DatabaseReference
 
     private var contractAmount =0
     var START_MILLI_SECONDS = 60000L
@@ -60,8 +62,11 @@ class home : Fragment() ,AnkoLogger {
         val guest_name=view.findViewById<TextView>(R.id.guestName)
         val name_Id=view.findViewById<TextView>(R.id.name_id)
 
+        val database = Firebase.database
+
+        myRef = database.getReference("Users")
         firebaseUser= FirebaseAuth.getInstance().currentUser;
-        FirebaseDatabase.getInstance().getReference().child("Users")
+        FirebaseDatabase.getInstance().reference.child("Users")
         myRef!!.child(firebaseUser!!.uid).get().addOnSuccessListener{
             if (it.exists()){
              val guest_names=it.child("name").value

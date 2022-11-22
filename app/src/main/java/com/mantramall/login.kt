@@ -23,6 +23,7 @@ import com.android.volley.toolbox.Volley
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.*
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.mantramall.dataModel.UserData
@@ -72,8 +73,7 @@ class login : AppCompatActivity() {
 
 
         val database = Firebase.database
-
-         myRef = database.getReference("Users")
+        myRef = database.getReference("Users")
 
 
 
@@ -131,23 +131,40 @@ class login : AppCompatActivity() {
                                     editor.putString("phnNumber", phnNo)
                                     editor.putString("authenticated", "true")
                                     editor.apply()
-                                    val nameId = (1000..10000).shuffled().last()
+                                    //val nameId = (1000..10000).shuffled().last()
+
+                                   val myUserRef = database.getReference("GlobalUserRank")
+
+                                    FirebaseDatabase.getInstance().getReference().child("GlobalUserRank")
+                                   myUserRef.get().addOnSuccessListener {
+                                       if(it.exists()){
+
+                                           val id:Int = it.value.toString().toInt()
+                                           val map: HashMap<String, Any> = HashMap()
+                                           map.put("mobileno","+91 "+phnNo);
+                                           map.put("name", "Guest_$id")
+                                           map.put("nameid",id)
+                                           if (userId != null) {
+                                               map.put("userid",userId)
+                                           };
+
+                                           map.put("imageurl","https://firebasestorage.googleapis.com/v0/b/mantrimall-bdd75.appspot.com/o/profile.png?alt=media&token=f1c19692-bf9c-4fce-9e88-a2aba433f271")
+
+                                           //  val user= UserData("+91 "+phnNo ,"guest","id","","")
+
+                                           if (userId != null) {
+                                               myRef.child(userId).setValue(map)
+                                           }
+
+                                           // incrmenting the global User Id
+                                           myUserRef.setValue(id+1)
+                                       }
+                                   }
+
+
                                    //val nameId="10"
-                                    val map: HashMap<String, Any> = HashMap()
-                                    map.put("mobileno","+91 "+phnNo);
-                                    map.put("name", "Guest_$nameId")
-                                    map.put("nameid",nameId)
-                                    if (userId != null) {
-                                        map.put("userid",userId)
-                                    };
 
-                                    map.put("imageurl","https://firebasestorage.googleapis.com/v0/b/mantrimall-bdd75.appspot.com/o/profile.png?alt=media&token=f1c19692-bf9c-4fce-9e88-a2aba433f271")
 
-                                  //  val user= UserData("+91 "+phnNo ,"guest","id","","")
-
-                                    if (userId != null) {
-                                        myRef.child(userId).setValue(map)
-                                    }
                                     binding.loadingLayout.visibility = View.GONE
                                     Toast.makeText(
                                         applicationContext, "Welcome...", Toast.LENGTH_SHORT
@@ -452,6 +469,11 @@ class login : AppCompatActivity() {
 
     }
 
+
+
+}
+
+class CreateUserProfile(value: Any?) {
 
 
 }

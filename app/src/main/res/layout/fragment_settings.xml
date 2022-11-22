@@ -30,6 +30,7 @@
                 android:translationZ="@dimen/_3sdp">
 
                 <ImageView
+                    android:id="@+id/profilePic"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:padding="@dimen/_3sdp"
@@ -53,6 +54,7 @@
                 android:translationZ="@dimen/_3sdp">
 
                 <ImageView
+                    android:id="@+id/editUserDetail"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:padding="@dimen/_10sdp"
@@ -70,6 +72,7 @@
                 android:translationZ="@dimen/_3sdp">
 
                 <ImageView
+                    android:id="@+id/saveUserDetail"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:padding="@dimen/_13sdp"
