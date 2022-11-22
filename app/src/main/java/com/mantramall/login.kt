@@ -132,16 +132,19 @@ class login : AppCompatActivity() {
                                     editor.putString("authenticated", "true")
                                     editor.apply()
                                     val nameId = (1000..10000).shuffled().last()
+                                   //val nameId="10"
                                     val map: HashMap<String, Any> = HashMap()
-                                    map.put("Mobile ","+91 "+phnNo);
-                                    map.put("Name","Guest_"+nameId)
-                                    map.put("NameId",nameId)
+                                    map.put("mobileno","+91 "+phnNo);
+                                    map.put("name", "Guest_$nameId")
+                                    map.put("nameid",nameId)
                                     if (userId != null) {
-                                        map.put("id",userId)
+                                        map.put("userid",userId)
                                     };
+
                                     map.put("imageurl","https://firebasestorage.googleapis.com/v0/b/mantrimall-bdd75.appspot.com/o/profile.png?alt=media&token=f1c19692-bf9c-4fce-9e88-a2aba433f271")
 
-                                    val user=UserData("+91 "+phnNo ,"guest","id","")
+                                  //  val user= UserData("+91 "+phnNo ,"guest","id","","")
+
                                     if (userId != null) {
                                         myRef.child(userId).setValue(map)
                                     }

@@ -11,7 +11,11 @@ import android.view.Window
 import android.widget.*
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.*
 import com.mantramall.R
+import com.mantramall.dataModel.UserData
 import com.wangsun.upi.payment.UpiPayment
 import com.wangsun.upi.payment.model.PaymentDetail
 import com.wangsun.upi.payment.model.TransactionDetails
@@ -19,7 +23,11 @@ import kotlinx.android.synthetic.main.fragment_home.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 
+
 class home : Fragment() ,AnkoLogger {
+
+    private var firebaseUser: FirebaseUser? = null
+    private var myRef: DatabaseReference? = null
 
     private var contractAmount =0
     var START_MILLI_SECONDS = 60000L
@@ -28,11 +36,12 @@ class home : Fragment() ,AnkoLogger {
     lateinit var string: String
     var isRunning: Boolean = false;
     var time_in_milli_seconds = 120000L
+
     private lateinit var countDownTimer:CountDownTimer
     @SuppressLint("MissingInflatedId", "ResourceType")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         // Inflate the layout for this fragment
 
@@ -47,10 +56,38 @@ class home : Fragment() ,AnkoLogger {
         val violetBtn = view.findViewById<ImageView>(R.id.violetBtn)
         val minutes = view.findViewById<TextView>(R.id.minutes)
         val seconds = view.findViewById<TextView>(R.id.seconds)
+
         val guest_name=view.findViewById<TextView>(R.id.guestName)
         val name_Id=view.findViewById<TextView>(R.id.name_id)
 
+        firebaseUser= FirebaseAuth.getInstance().currentUser;
+        FirebaseDatabase.getInstance().getReference().child("Users")
+        myRef!!.child(firebaseUser!!.uid).get().addOnSuccessListener{
+            if (it.exists()){
+             val guest_names=it.child("name").value
+              val guest_id=it.child("nameid").value
+                guest_name.text=guest_names.toString()
+                name_Id.text=guest_id.toString()
+            }
 
+        }
+
+//        FirebaseDatabase.getInstance().reference.child("Users").child(firebaseUser!!.uid).addValueEventListener(object : ValueEventListener {
+//                override fun onDataChange(snapshot: DataSnapshot) {
+//
+//                       val user = snapshot.getValue(UserData::class.java)
+//                       if (user != null) {
+//                           guest_name.setText(user.getName())
+//                       }
+//                       if (user != null) {
+//                           name_Id.setText(user.getNameid())
+//                       }
+//
+//
+//                }
+//
+//                override fun onCancelled(error: DatabaseError) {}
+//            })
 
        //  var totalWalletamount=walletamounts.setText("1000")
 

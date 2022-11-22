@@ -78,7 +78,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_5sdp"
                     android:fontFamily="@font/lato"
-                    android:text="Guest_900"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_11ssp" />
             </LinearLayout>
@@ -102,7 +101,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_5sdp"
                     android:fontFamily="@font/lato"
-                    android:text="6993"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_11ssp" />
             </LinearLayout>
