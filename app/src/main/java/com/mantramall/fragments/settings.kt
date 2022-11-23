@@ -90,6 +90,7 @@ class settings : Fragment() {
             saveDetailLL.setVisibility(View.INVISIBLE);
             toast("Saved Details")
 
+
         })
 
         myRefer.setOnClickListener {
