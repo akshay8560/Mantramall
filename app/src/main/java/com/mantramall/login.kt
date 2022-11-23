@@ -131,35 +131,52 @@ class login : AppCompatActivity() {
                                     editor.putString("phnNumber", phnNo)
                                     editor.putString("authenticated", "true")
                                     editor.apply()
-                                    //val nameId = (1000..10000).shuffled().last()
+                                    val nameId = (1000..10000).shuffled().last()
+                                    val map: HashMap<String, Any> = HashMap()
+                                    map.put("mobileno","+91 "+phnNo);
+                                    map.put("name", "Guest_$nameId")
+                                    if (userId != null) {
+                                        map.put("nameid",nameId)
+                                    }
+                                    if (userId != null) {
+                                        map.put("userid",userId)
+                                    };
 
-                                   val myUserRef = database.getReference("GlobalUserRank")
+                                    map.put("imageurl","https://firebasestorage.googleapis.com/v0/b/mantrimall-bdd75.appspot.com/o/profile.png?alt=media&token=f1c19692-bf9c-4fce-9e88-a2aba433f271")
 
-                                    FirebaseDatabase.getInstance().getReference().child("GlobalUserRank")
-                                   myUserRef.get().addOnSuccessListener {
-                                       if(it.exists()){
+                                    //  val user= UserData("+91 "+phnNo ,"guest","id","","")
 
-                                           val id:Int = it.value.toString().toInt()
-                                           val map: HashMap<String, Any> = HashMap()
-                                           map.put("mobileno","+91 "+phnNo);
-                                           map.put("name", "Guest_$id")
-                                           map.put("nameid",id)
-                                           if (userId != null) {
-                                               map.put("userid",userId)
-                                           };
+                                    if (userId != null) {
+                                        myRef.child(userId).setValue(map)
+                                    }
 
-                                           map.put("imageurl","https://firebasestorage.googleapis.com/v0/b/mantrimall-bdd75.appspot.com/o/profile.png?alt=media&token=f1c19692-bf9c-4fce-9e88-a2aba433f271")
-
-                                           //  val user= UserData("+91 "+phnNo ,"guest","id","","")
-
-                                           if (userId != null) {
-                                               myRef.child(userId).setValue(map)
-                                           }
-
-                                           // incrmenting the global User Id
-                                           myUserRef.setValue(id+1)
-                                       }
-                                   }
+//                                   val myUserRef = database.getReference("GlobalUserRank")
+//
+//                                    FirebaseDatabase.getInstance().getReference().child("GlobalUserRank")
+//                                   myUserRef.get().addOnSuccessListener {
+//                                       if(it.exists()){
+//
+//                                           val id:Int = it.value.toString().toInt()
+//                                           val map: HashMap<String, Any> = HashMap()
+//                                           map.put("mobileno","+91 "+phnNo);
+//                                           map.put("name", "Guest_$id")
+//                                           map.put("nameid",id)
+//                                           if (userId != null) {
+//                                               map.put("userid",userId)
+//                                           };
+//
+//                                           map.put("imageurl","https://firebasestorage.googleapis.com/v0/b/mantrimall-bdd75.appspot.com/o/profile.png?alt=media&token=f1c19692-bf9c-4fce-9e88-a2aba433f271")
+//
+//                                           //  val user= UserData("+91 "+phnNo ,"guest","id","","")
+//
+//                                           if (userId != null) {
+//                                               myRef.child(userId).setValue(map)
+//                                           }
+//
+//                                           // incrmenting the global User Id
+//                                           myUserRef.setValue(id+1)
+//                                       }
+//                                   }
 
 
                                    //val nameId="10"

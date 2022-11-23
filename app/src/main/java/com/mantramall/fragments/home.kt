@@ -77,6 +77,7 @@ class home : Fragment() ,AnkoLogger {
 
         }
 
+
 //        FirebaseDatabase.getInstance().reference.child("Users").child(firebaseUser!!.uid).addValueEventListener(object : ValueEventListener {
 //                override fun onDataChange(snapshot: DataSnapshot) {
 //
