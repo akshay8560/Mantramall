@@ -20,12 +20,12 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.mantramall.R
 import com.mantramall.R.*
+import com.mantramall.dataModel.UserData
 import com.mantramall.login
 import com.mantramall.referAndEarn
 import kotlinx.android.synthetic.main.activity_login.*
@@ -39,6 +39,7 @@ class settings : Fragment() {
     lateinit var sharedPrefference: SharedPreferences
     private var firebaseUser: FirebaseUser? = null
     private lateinit var myRef: DatabaseReference
+    lateinit var auth: FirebaseAuth
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -61,10 +62,10 @@ class settings : Fragment() {
         val saveDetailLL=view.findViewById<LinearLayout>(R.id.savedetailLL)
 
 
-
+        auth= FirebaseAuth.getInstance()
         val database = Firebase.database
         myRef = database.getReference("Users")
-        firebaseUser= FirebaseAuth.getInstance().currentUser;
+       firebaseUser= FirebaseAuth.getInstance().currentUser;
         FirebaseDatabase.getInstance().reference.child("Users")
         myRef!!.child(firebaseUser!!.uid).get().addOnSuccessListener{
             if (it.exists()){
@@ -75,6 +76,30 @@ class settings : Fragment() {
             }
 
         }
+
+
+//
+//        FirebaseDatabase.getInstance().reference.child("Users")
+//        myRef!!.child(firebaseUser!!.uid).addValueEventListener(object : ValueEventListener {
+//            override fun onDataChange(snapshot: DataSnapshot) {
+//
+//                val user = snapshot.getValue(UserData::class.java)
+//                if (user != null) {
+//
+//                    username.setText(user.getName())
+//                }
+//                if (user != null) {
+//                    phoneNumber.setText(user.getMobileno().toString())
+//                }
+//
+//
+//            }
+//
+//            override fun onCancelled(error: DatabaseError) {}
+//        })
+
+
+
         username.setEnabled(false)
         mobileNo.setEnabled(false)
         saveDetailLL.setVisibility(View.INVISIBLE);
@@ -99,11 +124,16 @@ class settings : Fragment() {
         termsAndConditions.setOnClickListener {
             dialogView()
         }
+        if(firebaseUser==null){
+            startActivity(Intent(requireContext(),login::class.java))
+        }
         logout.setOnClickListener {
+            auth.signOut()
             val editor: SharedPreferences.Editor = sharedPrefference.edit()
             editor.remove("authenticated")
             editor.apply()
             startActivity(Intent(requireContext(),login::class.java))
+
         }
         teamBonus.setOnClickListener {
             dialogView()

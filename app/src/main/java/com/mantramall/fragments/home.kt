@@ -24,13 +24,14 @@ import com.wangsun.upi.payment.model.TransactionDetails
 import kotlinx.android.synthetic.main.fragment_home.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
+import java.util.concurrent.TimeUnit
 
 
 class home : Fragment() ,AnkoLogger {
 
     private var firebaseUser: FirebaseUser? = null
     private lateinit var myRef: DatabaseReference
-
+    private lateinit var myRef1: DatabaseReference
     private var contractAmount =0
     var START_MILLI_SECONDS = 60000L
    private lateinit var minutes:TextView
@@ -62,43 +63,65 @@ class home : Fragment() ,AnkoLogger {
         val guest_name=view.findViewById<TextView>(R.id.guestName)
         val name_Id=view.findViewById<TextView>(R.id.name_id)
 
+        //Trade Id
+        val tradeId = view.findViewById<TextView>(R.id.TradeId)
+
+
         val database = Firebase.database
 
         myRef = database.getReference("Users")
+        myRef1 = database.getReference("Trade")
         firebaseUser= FirebaseAuth.getInstance().currentUser;
+
+//        FirebaseDatabase.getInstance().reference.child("Users").child(firebaseUser!!.uid)
+//        myRef!!.child(firebaseUser!!.uid).child("UserDetails").get().addOnSuccessListener{
+//            if (it.exists()){
+//             val guest_names=it.child("name").value
+//              val guest_id=it.child("nameid").value
+//                guest_name.text=guest_names.toString()
+//                name_Id.text=guest_id.toString()
+//            }
+//
+//        }
+
+
         FirebaseDatabase.getInstance().reference.child("Users")
-        myRef!!.child(firebaseUser!!.uid).get().addOnSuccessListener{
-            if (it.exists()){
-             val guest_names=it.child("name").value
-              val guest_id=it.child("nameid").value
-                guest_name.text=guest_names.toString()
-                name_Id.text=guest_id.toString()
+        myRef!!.child(firebaseUser!!.uid).addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+
+                       val user = snapshot.getValue(UserData::class.java)
+                       if (user != null) {
+
+                           guest_name.setText(user.getName())
+                       }
+                       if (user != null) {
+                           name_Id.setText(user.getNameid().toString())
+                       }
+
+
+                }
+
+                override fun onCancelled(error: DatabaseError) {}
+            })
+        FirebaseDatabase.getInstance().reference.child("Trade")
+        myRef1!!.child(firebaseUser!!.uid).addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+
+                val user = snapshot.getValue(UserData::class.java)
+                if (user != null) {
+                    tradeId.setText("TRADE ID : "+user.getTradeid().toString())
+                }
+
             }
 
-        }
+            override fun onCancelled(error: DatabaseError) {}
+        })
 
 
-//        FirebaseDatabase.getInstance().reference.child("Users").child(firebaseUser!!.uid).addValueEventListener(object : ValueEventListener {
-//                override fun onDataChange(snapshot: DataSnapshot) {
-//
-//                       val user = snapshot.getValue(UserData::class.java)
-//                       if (user != null) {
-//                           guest_name.setText(user.getName())
-//                       }
-//                       if (user != null) {
-//                           name_Id.setText(user.getNameid())
-//                       }
-//
-//
-//                }
-//
-//                override fun onCancelled(error: DatabaseError) {}
-//            })
-
-       //  var totalWalletamount=walletamounts.setText("1000")
+       walletamounts.setText("1000.0")
 
 
-        /*object : CountDownTimer(180000, 1000) {
+        object : CountDownTimer(180000, 1000) {
 
             override fun onTick(millisUntilFinished: Long) {
 
@@ -110,6 +133,7 @@ class home : Fragment() ,AnkoLogger {
 
             override fun onFinish() {
                 minutes.setText("00")
+                start()
             }
         }.start()
         object : CountDownTimer(60000, 1000) {
@@ -123,9 +147,10 @@ class home : Fragment() ,AnkoLogger {
             }
 
             override fun onFinish() {
-                minutes.setText("00")
+                seconds.setText("00")
+                start()
             }
-        }.start()*/
+        }.start()
         val num0 = view.findViewById<TextView>(R.id.num0)
         val num1 = view.findViewById<TextView>(R.id.num1)
         val num2 = view.findViewById<TextView>(R.id.num2)
@@ -180,35 +205,7 @@ class home : Fragment() ,AnkoLogger {
         greenBtn.setOnClickListener {
             contractBegin("Green")
 
-                /*object : CountDownTimer(180000, 1000) {
 
-                    override fun onTick(millisUntilFinished: Long) {
-
-                            minutes.setText(""+String.format("0%d", TimeUnit.MILLISECONDS.toMinutes( millisUntilFinished), -
-                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))))
-                       *//* minutes.setText("" + String.format("%d : %d",
-                            TimeUnit.MICROSECONDS.toMinutes( millisUntilFinished),
-                            TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
-                                    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));*//*
-
-                    }
-
-                    override fun onFinish() {
-                        minutes.setText("00")
-                    }
-                }.start()
-                object : CountDownTimer(60000, 1000) {
-
-                    override fun onTick(millisUntilFinished: Long) {
-                        val Secondss = millisUntilFinished / 1000 % 60
-                        seconds.setText(String.format("%02d", Secondss))
-
-                    }
-
-                    override fun onFinish() {
-                        minutes.setText("00")
-                    }
-                }.start()*/
 
 
         }
@@ -258,35 +255,7 @@ class home : Fragment() ,AnkoLogger {
             }else{
                 Toast.makeText(requireContext(), "Select checkbox first", Toast.LENGTH_SHORT).show()
             }
-//            object : CountDownTimer(180000, 1000) {
-//
-//                override fun onTick(millisUntilFinished: Long) {
-//
-//                    minutes.setText(""+String.format("0%d", TimeUnit.MILLISECONDS.toMinutes( millisUntilFinished), -
-//                 TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))))
-//                    /* minutes.setText("" + String.format("%d : %d",
-//                         TimeUnit.MICROSECONDS.toMinutes( millisUntilFinished),
-//                         TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
-//                                 TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));*/
-//
-//                }
-//
-//                override fun onFinish() {
-//                    minutes.setText("00")
-//                }
-//            }.start()
-//            object : CountDownTimer(60000, 1000) {
-//
-//                override fun onTick(millisUntilFinished: Long) {
-//                    val Secondss = millisUntilFinished / 1000 % 60
-//                    seconds.setText(String.format("%02d", Secondss))
-//
-//                }
-//
-//                override fun onFinish() {
-//                    minutes.setText("00")
-//                }
-//            }.start()
+
         }
         var c =1
         var clickCount =1
@@ -542,48 +511,10 @@ class home : Fragment() ,AnkoLogger {
                      }
                  }).pay()
          }
-         //   val existingApps = context?.let { UpiPayment.getExistingUpiApps(it) }
-         // info { "existing app: $existingApps" }
 
 
-//    private fun startUpiPayment() {
-//        val payment = PaymentDetail(
-//            vpa = "6377066167@ybl",
-//            name = "Mukesh Kumar",
-//            payeeMerchantCode = "",
-//            //txnId = "",
-//            txnRefId = "",
-//            description = "description",
-//            amount = "1.00"
-//        )
-//
-//        activity?.let {
-//            UpiPayment(it)
-//                .setPaymentDetail(payment)
-//                .setUpiApps(UpiPayment.UPI_APPS)
-//                .setCallBackListener(object : UpiPayment.OnUpiPaymentListener {
-//                    override fun onError(message: String) {
-//                        info { "transaction failed: $message" }
-//                        Toast.makeText(context, "transaction failed: $message", Toast.LENGTH_LONG).show()
-//                    }
-//
-//                    override fun onSubmitted(data: TransactionDetails) {
-//                        info { "transaction pending: $data" }
-//                        Toast.makeText(context, "transaction pending: $data", Toast.LENGTH_LONG).show()
-//                    }
-//
-//                    override fun onSuccess(data: TransactionDetails) {
-//                        info { "transaction success: $data" }
-//                        Toast.makeText(context, "transaction success: $data", Toast.LENGTH_LONG).show()
-//                    }
-//
-//                }).pay()
-//
-//            val existingApps = context?.let { it1 -> UpiPayment.getExistingUpiApps(it1) }
-//            info { "existing app: $existingApps" }
-//
-//
-//        }
+
+
     }
 
 

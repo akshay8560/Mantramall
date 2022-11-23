@@ -186,13 +186,14 @@
                 android:weightSum="2">
 
                 <TextView
+                    android:id="@+id/TradeId"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_10sdp"
                     android:layout_weight="1"
                     android:fontFamily="@font/lato"
                     android:gravity="start"
-                    android:text="Trade id : 193296"
+                    android:hint="Trade id : 193296"
                     android:textAllCaps="true"
                     android:textColor="@color/text_black"
                     android:textSize="@dimen/_11ssp" />

@@ -42,6 +42,7 @@ class login : AppCompatActivity() {
     lateinit var dialog: Dialog
 
     private lateinit var myRef: DatabaseReference
+    private lateinit var myRef1: DatabaseReference
     private lateinit var currentUsers: FirebaseUser
 
     lateinit var sharedPrefference: SharedPreferences
@@ -73,7 +74,9 @@ class login : AppCompatActivity() {
 
 
         val database = Firebase.database
+
         myRef = database.getReference("Users")
+        myRef1 = database.getReference("Trade")
 
 
 
@@ -132,51 +135,42 @@ class login : AppCompatActivity() {
                                     editor.putString("authenticated", "true")
                                     editor.apply()
                                     val nameId = (1000..10000).shuffled().last()
-                                    val map: HashMap<String, Any> = HashMap()
-                                    map.put("mobileno","+91 "+phnNo);
-                                    map.put("name", "Guest_$nameId")
-                                    if (userId != null) {
-                                        map.put("nameid",nameId)
-                                    }
-                                    if (userId != null) {
-                                        map.put("userid",userId)
-                                    };
+                                   val myUserRef = database.getReference("GlobalUserRank")
 
-                                    map.put("imageurl","https://firebasestorage.googleapis.com/v0/b/mantrimall-bdd75.appspot.com/o/profile.png?alt=media&token=f1c19692-bf9c-4fce-9e88-a2aba433f271")
+                                    FirebaseDatabase.getInstance().getReference().child("GlobalUserRank")
+                                   myUserRef.get().addOnSuccessListener {
+                                       if(it.exists()){
+                                           val id:Int = it.value.toString().toInt()
 
-                                    //  val user= UserData("+91 "+phnNo ,"guest","id","","")
+                                           // map
+                                           val map: HashMap<String, Any> = HashMap()
+                                           map.put("mobileno","+91 "+phnNo);
+                                           map.put("name", "Guest_$nameId")
+                                           map.put("nameid",nameId)
+                                           if (userId != null) {
+                                               map.put("userid",userId)
+                                           };
 
-                                    if (userId != null) {
-                                        myRef.child(userId).setValue(map)
-                                    }
+                                           map.put("imageurl","https://firebasestorage.googleapis.com/v0/b/mantrimall-bdd75.appspot.com/o/profile.png?alt=media&token=f1c19692-bf9c-4fce-9e88-a2aba433f271")
 
-//                                   val myUserRef = database.getReference("GlobalUserRank")
-//
-//                                    FirebaseDatabase.getInstance().getReference().child("GlobalUserRank")
-//                                   myUserRef.get().addOnSuccessListener {
-//                                       if(it.exists()){
-//
-//                                           val id:Int = it.value.toString().toInt()
-//                                           val map: HashMap<String, Any> = HashMap()
-//                                           map.put("mobileno","+91 "+phnNo);
-//                                           map.put("name", "Guest_$id")
-//                                           map.put("nameid",id)
-//                                           if (userId != null) {
-//                                               map.put("userid",userId)
-//                                           };
-//
-//                                           map.put("imageurl","https://firebasestorage.googleapis.com/v0/b/mantrimall-bdd75.appspot.com/o/profile.png?alt=media&token=f1c19692-bf9c-4fce-9e88-a2aba433f271")
-//
-//                                           //  val user= UserData("+91 "+phnNo ,"guest","id","","")
-//
-//                                           if (userId != null) {
-//                                               myRef.child(userId).setValue(map)
-//                                           }
-//
-//                                           // incrmenting the global User Id
-//                                           myUserRef.setValue(id+1)
-//                                       }
-//                                   }
+                                           //map1
+                                           val map1: HashMap<String, Any> = HashMap()
+                                           if (userId != null) {
+                                               map1.put("userid",userId)
+                                           };
+                                           if (userId != null) {
+                                               map1.put("tradeid",id)
+                                           }
+
+                                           if (userId != null) {
+                                               myRef.child(userId).setValue(map)
+                                               myRef1.child(userId).setValue(map1)
+                                           }
+
+                                           // incrementing the global User Id
+                                           myUserRef.setValue(id+1)
+                                       }
+                                   }
 
 
                                    //val nameId="10"

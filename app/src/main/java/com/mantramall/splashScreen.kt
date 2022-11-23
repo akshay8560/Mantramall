@@ -46,9 +46,12 @@ class splashScreen : AppCompatActivity() {
 
         }
         else{
-            val intent = Intent(applicationContext, login::class.java)
-            startActivity(intent)
-            finish()
+            Handler(Looper.getMainLooper()).postDelayed({
+                val intent = Intent(applicationContext, login::class.java)
+                startActivity(intent)
+                finish()
+            }, 1000)
+
         }
 
 
@@ -100,13 +103,5 @@ class splashScreen : AppCompatActivity() {
             }
         }, 3000)
     }
-//    override fun onStart() {
-//        super.onStart()
-//        val currentUser = mAuth.currentUser
-//        if (currentUser == null) {
-//            dialogView()
-//        } else {
-//           startsecondactivity()
-//        }
-//    }
+
 }
